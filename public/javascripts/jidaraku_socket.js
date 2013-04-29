@@ -141,7 +141,7 @@
 
                 button.bind( 'tap', function() {
 
-                    socket.emit( 'reqVote', sendData );
+                    //socket.emit( 'reqVote', sendData );
                 } );
 
                 return button;
@@ -169,7 +169,7 @@
 
                 button.bind( 'tap', function() {
 
-                    socket.emit( 'reqVote', sendData );
+                    //socket.emit( 'reqVote', sendData );
                 } );
 
                 return button;
@@ -278,31 +278,23 @@
             // eventの詳細受け取る
 
             console.log( eventDetail );
-            
-            if ( eventDetail.IsSuccess === true ) {
 
-                mkParticipateList( eventDetail.Participates );
+            jQuery( '#headTitle' ).html( eventDetail.Event.EventName );
             
-                mkTimeList( eventDetail.Items );
+            // mkParticipateList( eventDetail.Participates );
+            
+            mkTimeList( eventDetail.Items );
 
-                setEventDate( Number( eventDetail.Event.StartDate ) );
-            }
+            setEventDate( Number( eventDetail.Event.StartDate ) );
         } );
 
         socket.on( 'resNewItems', function( items ) {
 
             console.log( items );
 
-            if ( items.IsSuccess === true ) {
+            mkTimeList( items );
 
-                mkTimeList( items.Data );
-
-                jQuery( '#timeschedule' ).listview( 'refresh' );
-
-            } else {
-
-                alert( 'アイテムの作成に失敗しました' );
-            }
+            jQuery( '#timeschedule' ).listview( 'refresh' );
         } );
 
         // --------- イベントリスナ ---------

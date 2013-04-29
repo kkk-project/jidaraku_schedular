@@ -128,7 +128,7 @@ exports.getEventDetail = function (eventId, callback) {
 exports.createItem = function (data, callback) {
     var EventId = data.EventId;
     var item = {
-        ItemId    : 1,
+        ItemId    : data.ItemId,
         ItemName  : data.ItemName,
         StartTime : data.StartTime,
         EndTime   : data.EndTime,

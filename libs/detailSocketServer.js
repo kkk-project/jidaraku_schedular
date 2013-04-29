@@ -2,107 +2,71 @@ var fs  = require( 'fs' ),
     app = module.parent.exports,
     io  = app.get( 'io' ),
 
-    events = new Array(),
+    database = require( './database' ),
 
-    init = function() {
+    eventList = {},
 
-        var sampleJson = fs.readFileSync( './sampledata/eventDetail.json' );
+    setEvent = function( eventId, eventDetail ) {
 
-        events.push( JSON.parse( sampleJson ) );
-    },
+        if ( eventList[eventId] === undefined ) {
 
-    getNewItems = function( addItemInfo ) {
-
-        var length = events.length;
-
-        for ( var i = 0; i < length; i++ ) {
-
-            if ( events[i].Event.EventId == addItemInfo.EventId ) {
-
-                addItem( i, addItemInfo );
-
-                var items = {
-                        IsSuccess: true,
-                        Data     : events[i].Items
-                    };
-
-                return items;
-            }
+            eventList[eventId] = {};
         }
 
-        return { IsSuccess: false };
+        eventList[eventId] = eventDetail;
     },
 
-    addItem = function( idx, itemInfo ) {
+    setNewItems = function( eventId, newItems ) {
 
-        var newItemObj = {
-                ItemId   : events[idx].Items.length + 1,
-                ItemName : itemInfo.ItemName,
-                StartTime: itemInfo.StartTime,
-                EndTime  : itemInfo.EndTime,
-                Comment  : itemInfo.Comment,
-                VoteCount: 1,
-                VoteUsers: [
-                    {
-                        User: {
-                            Id  : itemInfo.User.Id,
-                            Name: itemInfo.User.Name
-                        }
-                    }
-                ]
-            };
+        if ( eventList[eventId] === undefined ) {
 
-        events[idx].Items.push( newItemObj );
+            return false;
+        }
+
+        eventList[eventId].Items = newItems;
     },
 
     getItemsByVote = function( voteInfo ) {
 
-        var eventsLen = events.length;
+        if ( eventList[voteInfo.EventId] === undefined ) {
 
-        for ( var i = 0; i < eventsLen; i++ ) {
-
-            if ( events[i].Event.EventId == voteInfo.EventId ) {
-
-                var isSuccess = false;
-
-                if ( voteInfo.Method == 'add' ) {
-
-                    isSuccess = setUserToItem( i, voteInfo.ItemId, voteInfo.UserId );
-
-                } else {
-
-                    isSuccess = delUserToItem( i, voteInfo.ItemId, voteInfo.UserId );
-                }
-
-                if ( isSuccess == true ) {
-
-                    var items = {
-                            IsSuccess: true,
-                            Data     : events[i].Items
-                        };
-
-                    return items;
-
-                } else {
-
-                    break;
-                }
-            }
+            return { IsSuccess: false };
         }
 
-        return { IsSuccess: false };
+        if ( voteInfo.Method == 'add' ) {
+
+            isSuccess = setUserToItem( voteInfo.EventId, voteInfo.ItemId, voteInfo.User );
+
+        } else {
+
+            isSuccess = delUserToItem( voteInfo.EventId, voteInfo.ItemId, voteInfo.User );
+        }
+
+        if ( isSuccess == true ) {
+
+            var items = {
+                    IsSuccess: true,
+                    Data     : eventList[voteInfo.EventId].Items
+                };
+
+            return items;
+
+        } else {
+
+            return { IsSuccess: false };
+        }
     },
 
-    setUserToItem = function( idx, itemId, userId ) {
+    setUserToItem = function( eventId, itemId, user ) {
 
-        var itemsLen = events[idx].Items.length;
+        var itemsLen = eventList[eventId].Items.length;
 
         for ( var i = 0; i < itemsLen; i++ ) {
 
-            if ( events[idx].Items[i].ItemId == itemId ) {
+            if ( eventList[eventId].Items[i].ItemId == itemId ) {
 
-                events[idx].Items[i].VoteCount++;
-                events[idx].Items[i].VoteUsers.push( userId );
+                eventList[eventId].Items[i].VoteCount++;
+                eventList[eventId].Items[i].VoteUsers.push( { User: user } );
 
                 return true;
             }
@@ -170,35 +134,45 @@ var fs  = require( 'fs' ),
         return { IsSuccess: false };
     };
 
-init();
-
 io.of( '/detail' ).on( 'connection', function ( socket ) {
 
     console.log( 'connect detail!!!' );
 
     socket.on( 'reqEventDetail', function( eventId ) {
 
-        // eventIdをブラウザから送られてきたとき
-
         // monngoに格納されているイベント情報を取得する
 
-        // プロトではメモリ上から取得
-        socket.emit( 'resEventDetail', getEventDetail( eventId ) );
+        database.getEventDetail( eventId, function( eventDetail ) {
+
+            socket.emit( 'resEventDetail', eventDetail[0] );
+
+            setEvent( eventId, eventDetail[0] );
+        } );
     } );
 
-    socket.on( 'reqCreateItem', function( itemInfo ) {
+    socket.on( 'reqCreateItem', function( newItemInfo ) {
 
-        var newItems = getNewItems( itemInfo );
+        database.createItem( newItemInfo, function( itemList ) {
 
-        socket.emit( 'resNewItems', newItems );
-        socket.broadcast.emit( 'resNewItems', newItems );
+            if ( itemList === false ) {
+
+                // エラーを返す
+
+            } else {
+
+                socket.emit( 'resNewItems', itemList[0].Items );
+                socket.broadcast.emit( 'resNewItems', itemList[0].Items );
+
+                setNewItems( newItemInfo.EventId, itemList[0].Items );
+            }
+        } );
     } );
 
     socket.on( 'reqVote', function( voteInfo ) {
 
         var newItems = getItemsByVote( voteInfo );
 
-        socket.emit( 'resNewItems', newItems );
-        socket.broadcast.emit( 'resNewItems', newItems );
+        socket.emit( 'resNewItems', newItems.Data );
+        socket.broadcast.emit( 'resNewItems', newItems.Data );
     } );
 } );
