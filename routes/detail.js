@@ -23,23 +23,7 @@ exports.detail = function( req, res ) {
 
         setEventInfo = function( userId, userName, eventId ) {
 
-            console.log( userId );
-        
-            // eventIdを指定してmongoDBからイベント情報取得
-
-            var eventInfo = {
-                    "EventName" : "第三回開発作戦会議！！！",
-                    "StartDate" : 1366988400000
-                };
-
             // 本来はコールバック内で実行する
-            res.render( 'detail', {
-                id      : eventId,
-                userId  : userId,
-                userName: userName,
-                title   : eventInfo.EventName,
-                date    : mkDate( eventInfo.StartDate )
-            } );
         };
 
     // --------- 処理 ---------
@@ -48,15 +32,18 @@ exports.detail = function( req, res ) {
 
         if ( req.query.id === undefined ) {
             
-            // IDが指定されていないのでエラー表示
-
-            console.log( 'id is nothing' );
+            // IDが指定されていなかったらトップへ
 
             res.redirect( '/events' );
 
         } else {
         
-            setEventInfo( req.user.id, req.user.Name, req.query.id );
+            // setEventInfo( req.user.id, req.user.Name, req.query.id );
+            res.render( 'detail', {
+                id      : req.query.id,
+                userId  : req.user.id,
+                userName: req.user.Name
+            } );
         }
         
     } )();

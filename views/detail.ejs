@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title><%= title %></title>
+    <title>自堕落スケジューラ詳細</title>
 
     <!-- 横幅を自動で合わせてくれる -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,15 +22,11 @@
     
     <div data-role="header" data-position="fixed">
         <a href="" data-role="button" data-icon="home" data-iconpos="notext"></a>
-        <h1><%= title %></h1>
+        <h1 id=headTitle></h1>
         <a href="#userList" data-role="button" data-icon="grid" data-iconpos="notext" data-rel="dialog" data-transition="pop"></a>
     </div>
     
     <div data-role="content" id="detailContent">
-
-        <p>日にち：<%= date %></p>
-
-        <br />
 
         <ul data-role="listview" id="timeschedule">
         </ul>
