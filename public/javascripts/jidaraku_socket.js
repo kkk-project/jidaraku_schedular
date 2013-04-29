@@ -4,8 +4,9 @@
 
         // ---------- 変数・定数定義 ---------
     
-        var mEventId = jQuery( '#eventId' ).val(),
-            mUserId = jQuery( '#user' ).val(),
+        var mEventId  = jQuery( '#eventId' ).val(),
+            mUserId   = jQuery( '#userId' ).val(),
+            mUserName = jQuery( '#userName' ).val(),
 
             // イベント日のタイムスタンプ格納場所
             mEventDate = 0, 
@@ -22,6 +23,11 @@
             getUserId = function() {
                 
                 return mUserId;
+            },
+
+            getUserName = function() {
+                
+                return mUserName;
             },
 
             getEventDate = function() {
@@ -42,7 +48,7 @@
                 
                 for ( var i = 0; i < length; i++ ) {
                 
-                    var li = jQuery( '<li>' ).html( userList[i].UserId );
+                    var li = jQuery( '<li>' ).html( userList[i].User.Name );
                     
                     jQuery( '#userListview' ).append( li );
                 }
@@ -62,8 +68,6 @@
 
                     setItem( itemInfoList[i] );
                 }
-
-                // jQuery( '#timeschedule' ).listview( 'refresh' );
             },
             // }}}
 
@@ -106,7 +110,7 @@
 
                 for ( var i = 0; i < length; i++ ) {
 
-                    if ( voteUsers[i] == getUserId() ) {
+                    if ( voteUsers[i].User.Id == getUserId() ) {
 
                         return true;
                     }
@@ -126,10 +130,13 @@
                 button.attr( 'data-inline', 'true' );
 
                 var sendData = {
-                        Method: 'add',
+                        Method : 'add',
                         EventId: getEventId(),
-                        ItemId: itemId,
-                        UserId: getUserId()
+                        ItemId : itemId,
+                        User   : {
+                            Id: getUserId(),
+                            Name: getUserName()
+                        }
                     };
 
                 button.bind( 'tap', function() {
@@ -154,7 +161,10 @@
                         Method: 'delete',
                         EventId: getEventId(),
                         ItemId: itemId,
-                        UserId: getUserId()
+                        User   : {
+                            Id  : getUserId(),
+                            Name: getUserName()
+                        }
                     };
 
                 button.bind( 'tap', function() {
@@ -200,7 +210,7 @@
 
                 for ( var i = 0; i < length; i++ ) {
 
-                    var user = jQuery( '<p>' ).html( voteUsers[i] );
+                    var user = jQuery( '<p>' ).html( voteUsers[i].User.Name );
 
                     voteUserList.append( user );
                 }
@@ -225,7 +235,10 @@
 
                     itemInfo = {
                         EventId: getEventId(),
-                        UserId: getUserId(),
+                        User: {
+                            Id  : getUserId(),
+                            Name: getUserName()
+                        },
                         ItemName: title,
                         Comment: comment,
                         StartTime: startTimestamp,

@@ -43,7 +43,12 @@ var fs  = require( 'fs' ),
                 Comment  : itemInfo.Comment,
                 VoteCount: 1,
                 VoteUsers: [
-                    itemInfo.UserId
+                    {
+                        User: {
+                            Id  : itemInfo.User.Id,
+                            Name: itemInfo.User.Name
+                        }
+                    }
                 ]
             };
 

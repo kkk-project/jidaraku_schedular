@@ -11,37 +11,39 @@
             "StartTime" : 1367020800000,
             "EndTime"   : 1367024400000,
             "Comment"   : "サンプルアイテムその１だぜ☆",
-            "VoteCount" : 2,
+            "VoteCount" : 1,
             "VoteUsers" : [
-                "hkitamur",
-                "shomma"
+                {
+                    "User": {
+                        "Id"  : "qawsedrftgyhujikolp",
+                        "Name": "muhuhu"
+                    }
+                }
             ]
         },
         {
             "ItemId"    : 2,
-            "ItemName"  : "アイテムのタイトルver2なんだぜ☆",
-            "Comment"   : "サンプルアイテムその２だぜ☆",
-            "StartTime" : 1367031600000,
-            "EndTime"   : 1367033400000,
-            "VoteCount" : 2,
+            "ItemName"  : "にょわー",
+            "StartTime" : 1367030800000,
+            "EndTime"   : 1367034400000,
+            "Comment"   : "おっすおっす",
+            "VoteCount" : 1,
             "VoteUsers" : [
-                "hkitamur",
-                "shomma"
+                {
+                    "User": {
+                        "Id"  : "517e05aeb33a6dfd7f000001",
+                        "Name": "Hiroto  Kitamura"
+                    }
+                }
             ]
         }
     ],
     "Participates" : [
         {
-            "UserId"   : "nireisan",
-            "UserName" : "にれい"
-        },
-        {
-            "UserId"   : "hkitamur",
-            "UserName" : "えの"
-        },
-        {
-            "UserId"   : "shomma",
-            "UserName" : "しんべえ"
+            "User": {
+                "Id"  : "qawsedrftgyhujikolp",
+                "Name": "muhuhu"
+            }
         }
     ]
 }
