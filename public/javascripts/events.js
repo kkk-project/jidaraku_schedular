@@ -84,7 +84,7 @@
     var addEventList = function(eventName, date, id) {
         var ahref = '<li id="' + id + '"><div class="ui-grid-a">'
                         + '<div class="ui-block-a" style="width: 90%;">'
-                        +   '<a href="detail/?id=' + id + '">' + htmlEscape(eventName) + '</a><br />'
+                        +   '<a href="detail?id=' + id + '">' + htmlEscape(eventName) + '</a><br />'
                         +   '<small>' + date + '</small>'
                         + '</div>'
                         + '<div class="ui-block-b" style="width: 10%; text-align: right;">'
