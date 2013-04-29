@@ -12,14 +12,17 @@
 (function () {
     var socket = io.connect('www12139ui.sakura.ne.jp/sample');
     // イベント一覧の取得
+   /*
     socket.emit('reqEventList', '<%= user.id %>');
     socket.on('resEventList', function( eventList) {
         console.log(eventList);
     });
+    */
 
     // イベントの作成
+    /*
     var data = {
-        eventName: 'イベント1',
+        eventName: 'イベント2',
         startDate : '2013/05/01',
         user : {
             id : '<%= user.id %>',
@@ -30,8 +33,8 @@
     socket.on('resCreateEvent', function( eventInfo) {
         console.log(eventInfo);
     });
+    */
 
-    // var socket = io.connect('www12139ui.sakura.ne.jp/detail');
     // socket.emit('reqEventDetail', {
     //     eventId : '51698d7731510b11bf91ea09'
     // });
@@ -39,6 +42,23 @@
     // socket.on('resEventDetail', function( eventDetail) {
     //     console.log(eventDetail);
     // });
+
+    // アイテムの作成
+    var data = {
+        EventId: '517bc5078a1ef01608000002',
+        user : {
+            Id : '<%= user.id %>',
+            Name : '<%= user.Name %>'
+        },
+        ItemName: "new item だにぃ",
+        Comment: "新しく作ったよー！",
+        StartTime :  1234567890, // タイムスタンプ(ミリ秒)
+        EndTIme : 1234567890 // タイムスタンプ(ミリ秒)
+    };
+    socket.emit('reqCreateItem', data);
+    socket.on('resCreateItem', function( eventInfo) {
+        console.log(eventInfo);
+    });
 })();
 </script>
   </body>

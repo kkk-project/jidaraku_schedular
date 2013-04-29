@@ -84,7 +84,7 @@ exports.createEvent = function (data , callback) {
         Items : [],
         Participates : [
             {
-                UserId : data.user.id,
+                UserId : data.user.Id,
                 UserName : data.user.Name
             }
         ]
@@ -119,6 +119,43 @@ exports.getEventDetail = function (eventId, callback) {
             return false;
         } else {
             callback(eventDetail);
+        }
+    });
+};
+// }}}
+
+// createItem {{{
+exports.createItem = function (data, callback) {
+    var EventId = data.EventId;
+    var item = {
+        ItemId    : 1,
+        ItemName  : data.ItemName,
+        StartTime : data.StartTime,
+        EndTime   : data.EndTime,
+        Comment   : data.Comment,
+        VoteCount : 1,
+        VoteUsers : [
+            {
+                User: data.User
+            }
+        ]
+    };
+    var Event = model.Event;
+    // イベントにアイテムを追加
+    Event.update({ _id : EventId }, { $push: { Items : item }}, function(err){
+        if (err) {
+            console.log(err);
+            return false;
+        } else {
+            // イベントのアイテム一覧を返す
+            Event.find({ _id : EventId }, { Items: 1}, function(err, eventItemList){
+                if (err) {
+                    console.log(err);
+                    return false;
+                } else {
+                    callback(eventItemList);
+                }
+            });
         }
     });
 };
