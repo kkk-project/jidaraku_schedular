@@ -36,11 +36,13 @@
     */
 
     // イベントの削除
+   /*
    var eventId = '517bc5078a1ef01608000002';
     socket.emit('reqDeleteEvent', eventId);
     socket.on('resDeleteEvent', function( res) {
         console.log(res);
     });
+   */
 
     // socket.emit('reqEventDetail', {
     //     eventId : '51698d7731510b11bf91ea09'
@@ -68,6 +70,21 @@
         console.log(eventInfo);
     });
     */
+
+   /*
+    var data = {
+        EventId: 
+        User: {
+            Id:,
+            Name
+            }
+            }
+            */
+
+    socket.emit('reqAddParticipates', data);
+    socket.on('resAddParticipates', function(res) {
+        console.log(res);
+    });
 })();
 </script>
   </body>

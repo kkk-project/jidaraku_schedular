@@ -76,6 +76,7 @@ exports.getEventList = function (userId, condition, callback) {
  * @param callback コールバック関数
  */
 exports.createEvent = function (data , callback) {
+    console.log(data);
     var eventInfo = {
         Event : {
             EventName : data.eventName,
@@ -138,7 +139,7 @@ exports.getEventDetail = function (eventId, callback) {
 exports.createItem = function (data, callback) {
     var EventId = data.EventId;
     var item = {
-        ItemId    : 1,
+        ItemId    : data.ItemId,
         ItemName  : data.ItemName,
         StartTime : data.StartTime,
         EndTime   : data.EndTime,
@@ -170,3 +171,31 @@ exports.createItem = function (data, callback) {
     });
 };
 // }}}
+
+// deleteItem {{{
+//exports.deleteItem = function ( data, callback) {
+//    Event.remove({Items.ItemId: data.ItemId}, function(
+//    )
+
+// addUserEvent {{{
+exports.addParticipates = function (data, callback) {
+    var EventId = data.EventId;
+
+    var Event = model.Event;
+    Event.update({ _id : EventId }, { $push: { Participates : data.User }}, function(err){
+        if (err) {
+            console.log(err);
+            callback({EventId: EventId, isSuccess: false});
+        } else {
+            callback({EventId: EventId, isSuccess: true});
+        }
+    });
+};
+// }}}
+    
+
+
+
+
+
+
