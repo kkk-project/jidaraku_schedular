@@ -15,7 +15,7 @@ exports.findOrCreateUser = function (account, callback) {
     else if (typeof account.TwitterId !== 'undefined') {
         var accountId = { TwitterId : account.TwitterId };
     } else {
-        return false;
+        callback(false);
     }
 
     User.findOne(accountId, function(err, user){
@@ -51,7 +51,7 @@ exports.getEventList = function (userId, condition, callback) {
     Event.find({ "Participates.UserId" : userId}, { _id : 1, Event : 1}, function(err, eventListDB){
             if (err) {
                 console.log(err);
-                return false;
+                callback(false);
             } else {
                 var eventList = [];
                 eventListDB.forEach(function (val, idx, arr){
@@ -76,6 +76,7 @@ exports.getEventList = function (userId, condition, callback) {
  * @param callback コールバック関数
  */
 exports.createEvent = function (data , callback) {
+    console.log(data);
     var eventInfo = {
         Event : {
             EventName : data.eventName,
@@ -84,8 +85,7 @@ exports.createEvent = function (data , callback) {
         Items : [],
         Participates : [
             {
-                UserId : data.user.Id,
-                UserName : data.user.Name
+                User : data.User
             }
         ]
     };
@@ -107,8 +107,19 @@ exports.createEvent = function (data , callback) {
 };
 // }}}
 
-// deleteEvent
-// return { id : id , isSuccess : true or false }
+// deleteEvent {{{
+exports.deleteEvent = function (eventId, callback) {
+    var Event = model.Event;
+    Event.remove({ _id : eventId }, function(err, eventDetail){
+        if (err) {
+            console.log(err);
+            callback({id:eventId, isSuccess: false});
+        } else {
+            callback({id:eventId, isSuccess: true});
+        }
+    });
+};
+// }}}
 
 // getEventDetail {{{
 exports.getEventDetail = function (eventId, callback) {
@@ -116,7 +127,7 @@ exports.getEventDetail = function (eventId, callback) {
     Event.find({ _id : eventId }, function(err, eventDetail){
         if (err) {
             console.log(err);
-            return false;
+            callback(false);
         } else {
             callback(eventDetail);
         }
@@ -145,13 +156,13 @@ exports.createItem = function (data, callback) {
     Event.update({ _id : EventId }, { $push: { Items : item }}, function(err){
         if (err) {
             console.log(err);
-            return false;
+            callback(false);
         } else {
             // イベントのアイテム一覧を返す
             Event.find({ _id : EventId }, { Items: 1}, function(err, eventItemList){
                 if (err) {
                     console.log(err);
-                    return false;
+                    callback(false);
                 } else {
                     callback(eventItemList);
                 }
@@ -160,3 +171,31 @@ exports.createItem = function (data, callback) {
     });
 };
 // }}}
+
+// deleteItem {{{
+//exports.deleteItem = function ( data, callback) {
+//    Event.remove({Items.ItemId: data.ItemId}, function(
+//    )
+
+// addUserEvent {{{
+exports.addParticipates = function (data, callback) {
+    var EventId = data.EventId;
+
+    var Event = model.Event;
+    Event.update({ _id : EventId }, { $push: { Participates : data.User }}, function(err){
+        if (err) {
+            console.log(err);
+            callback({EventId: EventId, isSuccess: false});
+        } else {
+            callback({EventId: EventId, isSuccess: true});
+        }
+    });
+};
+// }}}
+    
+
+
+
+
+
+

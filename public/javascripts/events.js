@@ -1,5 +1,5 @@
 (function(){
-    var socket = io.connect('http://www12139ui.sakura.ne.jp');
+    var socket = io.connect('http://www12139ui.sakura.ne.jp/events');
     var userId = $('#userId').val();
     var userName = $('#userName').val();
 
@@ -21,20 +21,17 @@
         var obj = {
                 eventName: eventName,
                 startDate: startDate,
-                userId: userId,
-                userName: userName
+                user : {
+                    id: userId,
+                    Name: userName
+                }
             }
         socket.emit('reqCreateEvent', obj);
     };
 
     // イベント削除
     var reqDeleteEvent = function(eventId){
-        var obj = {
-                userId: userId,
-                userName: userName,
-                eventId: eventId
-            }
-        socket.emit('reqDeleteEvent', obj);
+        socket.emit('reqDeleteEvent', eventId);
     }
 
 
@@ -44,21 +41,23 @@
 
     // EventListを取得して描画関数に渡す
     socket.on('resEventList', function(eventList){
-        showEventList(eventList.events);
+        if ( undefined !== eventList) {
+            showEventList(eventList);
+        }
     });
 
     // イベント受信時 
     socket.on('resCreateEvent', function(eventList){
-        showEventList(eventList.events);
+        showEventList(eventList);
     });
 
 
     // イベント受信時 
-    socket.on('resDeleteEvent', function(eventId, bool){
-        if ( bool ) {
-            alert('失敗しちゃった');
+    socket.on('resDeleteEvent', function(removeObj){
+        if ( removeObj.isSuccess === true ) {
+            $('#' + removeObj.id).remove();
         } else {
-            $('#' + eventId).remove();
+            alert('失敗しちゃった');
         }
     });
 
@@ -83,10 +82,9 @@
 
     // イベントリストのフォーマット
     var addEventList = function(eventName, date, id) {
-        console.log(eventName);
         var ahref = '<li id="' + id + '"><div class="ui-grid-a">'
                         + '<div class="ui-block-a" style="width: 90%;">'
-                        +   '<a href="detail/?id=' + id + '">' + htmlEscape(eventName) + '</a><br />'
+                        +   '<a href="detail?id=' + id + '">' + htmlEscape(eventName) + '</a><br />'
                         +   '<small>' + date + '</small>'
                         + '</div>'
                         + '<div class="ui-block-b" style="width: 10%; text-align: right;">'
@@ -102,8 +100,6 @@
     $('a.delete').live("click", function(){
         if ( confirm('削除しますか？') ) {
             reqDeleteEvent($(this).parents('li').attr('id'));
-//todo
-            $('#' + $(this).parents('li').attr('id')).remove();
         }
     });
 
@@ -125,8 +121,6 @@
             var date = htmlEscape(this.date());
 
             sendEventData(escapedName, date, userId);
-//todo
-            addEventList(escapedName, date);
         };
     }
     // Activates knockout.js

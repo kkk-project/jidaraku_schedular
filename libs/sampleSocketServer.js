@@ -6,13 +6,11 @@ io.of( '/sample' ).on( 'connection', function ( socket ) {
 
     console.log( 'connect sample!!!' );
 
-    /*
     socket.on( 'reqEventList', function( userId ) {
         database.getEventList(userId, null, function(eventList) {
             socket.emit( 'resEventList', eventList);
         });
     });
-    */
 
     /**
      * data = {
@@ -24,19 +22,17 @@ io.of( '/sample' ).on( 'connection', function ( socket ) {
      *      }
      * }
      */
-    /*
     socket.on( 'reqCreateEvent', function( data ) {
         database.createEvent(data, function(eventInfo) {
             socket.emit( 'resCreateEvent', eventInfo);
         });
     });
-    */
 
-    // socket.on( 'reqDeleteEvent', function( userId ) {
-    //     database.getEventList(userId, null, function(eventList) {
-    //         socket.emit( 'resDeleteEvent', eventList);
-    //     });
-    // });
+    socket.on( 'reqDeleteEvent', function( eventId ) {
+        database.deleteEvent(eventId, function(res) {
+            socket.emit( 'resDeleteEvent', res);
+        });
+    });
 
    /*
         {
