@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>aaaa</title>
+    <title ><%= title %></title>
 
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,maximum-scale=1"> 
 
@@ -15,12 +15,13 @@
 <body>
 
 <input type="hidden" id="userId" value="<%= userId %>">
+<input type="hidden" id="userName" value="<%= userName %>">
 
 <div data-role="page" id="eventMenu">
 
     <div data-role="header" data-position="fixed">
         <a href="" data-role="button" data-icon="home" data-iconpos="notext"></a>
-        <h1>title</h1>
+        <h1><%= userName %>さんのイベント一覧</h1>
         <a href="#userList" data-role="button" data-icon="grid" data-iconpos="notext" data-rel="dialog" data-transitio="pop"></a>
     </div>
 
@@ -41,7 +42,7 @@
 
     <div data-role="content">
         <p>タイトル: <input data-bind='value: eventName, valueUpdate: "afterkeydown"' /></p>
-        <p>日時: <input data-bind='value: date' type='date' data-role="datebox" data-options='{"mode":"flipbox"}' value="" /></p>
+        <p>日時: <input type='date' data-bind='value: date' /></p>
         <a href="#eventMenu" data-role="button" data-bind="click: createEvent, visible: inputCheck" >作成</a>
     </div>
 </div><!-- /page -->

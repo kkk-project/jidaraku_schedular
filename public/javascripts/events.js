@@ -1,6 +1,7 @@
 (function(){
     var socket = io.connect('http://www12139ui.sakura.ne.jp');
     var userId = $('#userId').val();
+    var userName = $('#userName').val();
 
     //////////////////////////////////////
     // emit
@@ -8,17 +9,32 @@
 
     // init eventList取得
     $(document).ready(function(){
-        socket.emit('reqEventList', userId);
+        var obj = {
+                userId: userId,
+                userName: userName
+            }
+        socket.emit('reqEventList', obj);
     });
 
     // イベント作成送信
     var sendEventData = function(eventName, startDate, userId){
-        socket.emit('reqCreateEvent', eventName, startDate, userId);
+        var obj = {
+                eventName: eventName,
+                startDate: startDate,
+                userId: userId,
+                userName: userName
+            }
+        socket.emit('reqCreateEvent', obj);
     };
 
     // イベント削除
     var reqDeleteEvent = function(eventId){
-        socket.emit('reqDeleteEvent', eventId);
+        var obj = {
+                userId: userId,
+                userName: userName,
+                eventId: eventId
+            }
+        socket.emit('reqDeleteEvent', obj);
     }
 
 

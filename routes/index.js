@@ -4,7 +4,11 @@
  */
 
 exports.index = function(req, res){
-    res.render('index', { title: 'じだらくスケジューラ' });
+    res.render('events', {
+                              title: 'じだらくスケジューラ'
+                            , userName: req.user.Name
+                            , userId: req.user.id
+                         });
 };
 
 exports.login = function(req, res){
