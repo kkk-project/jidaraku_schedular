@@ -11,7 +11,7 @@
             // イベント日のタイムスタンプ格納場所
             mEventDate = 0, 
 
-            socket = io.connect( 'http://www12139ui.sakura.ne.jp:50280/detail' ),
+            socket = io.connect( 'http://www12139ui.sakura.ne.jp:3000/detail' ),
                 
         // --------- 関数定義 ---------
 
@@ -179,8 +179,8 @@
             // {{{ mkHour = function( startTimestamp, endTimestamp )
             mkHour = function( startTimestamp, endTimestamp ) {
 
-                var startDate = new Date( startTimestamp ),
-                    endDate = new Date( endTimestamp );
+                var startDate = new Date( startTimestamp - ( 1000 * 60 * 60 * 9 ) ),
+                    endDate = new Date( endTimestamp - ( 1000 * 60 * 60 * 9 ) );
 
                 var startHour = startDate.getHours(),
                     startMin  = startDate.getMinutes(),

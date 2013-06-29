@@ -177,7 +177,7 @@ exports.createItem = function (data, callback) {
 //    Event.remove({Items.ItemId: data.ItemId}, function(
 //    )
 
-// addUserEvent {{{
+// addParticipates {{{
 exports.addParticipates = function (data, callback) {
     var EventId = data.EventId;
 
@@ -192,10 +192,3 @@ exports.addParticipates = function (data, callback) {
     });
 };
 // }}}
-    
-
-
-
-
-
-

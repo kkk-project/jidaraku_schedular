@@ -9,18 +9,15 @@
 
     // init eventList取得
     $(document).ready(function(){
-        var obj = {
-                userId: userId,
-                userName: userName
-            }
-        socket.emit('reqEventList', obj);
+        socket.emit('reqEventList', userId);
     });
 
     // イベント作成送信
     var sendEventData = function(eventName, startDate, userId){
+	var time = (new Date(startDate)).getTime();
         var obj = {
                 eventName: eventName,
-                startDate: startDate,
+                startDate: time,
                 user : {
                     id: userId,
                     Name: userName
@@ -81,11 +78,12 @@
     };
 
     // イベントリストのフォーマット
-    var addEventList = function(eventName, date, id) {
+    var addEventList = function(eventName, time, id) {
+	var date = (new Date(time));
         var ahref = '<li id="' + id + '"><div class="ui-grid-a">'
                         + '<div class="ui-block-a" style="width: 90%;">'
-                        +   '<a href="detail?id=' + id + '">' + htmlEscape(eventName) + '</a><br />'
-                        +   '<small>' + date + '</small>'
+                        +   '<a href="detail?id=' + id + '" rel="external">' + htmlEscape(eventName) + '</a><br />'
+                        +   '<small>' + date.getFullYear() + '-' + (date.getMonth()+1) + '-' + date.getDate() + '</small>'
                         + '</div>'
                         + '<div class="ui-block-b" style="width: 10%; text-align: right;">'
                         +   '<a class="delete" data-role="button" data-inline="true"'
